@@ -2,10 +2,17 @@ from flask import Flask, render_template, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-
+import os
 import CUSTOMFUNCTION as ext_func
 
 app = Flask(__name__)
+
+
+# When running in Posit Workbench, apply ProxyFix middleware
+# See: https://flask.palletsprojects.com/en/2.2.x/deploying/proxy_fix/ 
+if 'RS_SERVER_URL' in os.environ and os.environ['RS_SERVER_URL']:
+	from werkzeug.middleware.proxy_fix import ProxyFix
+	app.wsgi_app = ProxyFix(app.wsgi_app, x_prefix=1)
 
 # Flask-WTF requires an encryption key - the string can be anything
 app.config['SECRET_KEY'] = 'C2HWGVoMGfNTBsrYQg8EcMrdTimkZfAb'

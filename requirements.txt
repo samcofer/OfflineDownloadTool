@@ -2,3 +2,5 @@ Flask
 WTForms
 requests
 packaging
+flask_bootstrap
+flask_wtf
