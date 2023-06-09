@@ -56,6 +56,6 @@ def URLRetrieval(r_versions, python_versions, quarto_versions, OS):
     output = output + subprocess.check_output(command, shell=True, encoding="utf-8")
     command = "./wbi install quarto --version " + quarto_versions + " --operating-system " + OS
     output = output + subprocess.check_output(command, shell=True, encoding="utf-8")
-    command = "./wbi install workbench --version " + quarto_versions + " --operating-system " + OS
+    command = "./wbi install workbench --operating-system " + OS
     output = output + subprocess.check_output(command, shell=True, encoding="utf-8")
     return output
