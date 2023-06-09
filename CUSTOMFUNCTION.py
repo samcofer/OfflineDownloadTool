@@ -49,7 +49,13 @@ def vscode_lookup(vsc_version, namespace, name):
                       'url': json_correct_version_response['files']['download']}
             return result
 
-def URLRetrieval(r_versions, python_versions, OS):
-    command = "./wbi install r --version 4.2.2,4.1.3 --operating-system RH9"
+def URLRetrieval(r_versions, python_versions, quarto_versions, OS):
+    command = "./wbi install r --version " + r_versions + " --operating-system " + OS
     output = subprocess.check_output(command, shell=True, encoding="utf-8")
+    command = "./wbi install python --version " + python_versions + " --operating-system " + OS
+    output = output + subprocess.check_output(command, shell=True, encoding="utf-8")
+    command = "./wbi install quarto --version " + quarto_versions + " --operating-system " + OS
+    output = output + subprocess.check_output(command, shell=True, encoding="utf-8")
+    command = "./wbi install workbench --version " + quarto_versions + " --operating-system " + OS
+    output = output + subprocess.check_output(command, shell=True, encoding="utf-8")
     return output
