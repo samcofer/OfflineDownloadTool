@@ -33,28 +33,24 @@ VSCode Extension Lookup
   <div class="row">
     <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
 
-      <h1 class="pt-5 pb-2">Offline VSCode Extension Lookup Tool</h1>
+      <h1 class="pt-5 pb-2">Offline Posit Workbench Installation Download Tool</h1>
         <form action="{{ url_for('index') }}" method="post">
       <p class="lead">This application will take the following information and return
-          the most recent version of VSCode Extension that will work with your version
-          of VSCode</p>
+          the correct download links for R, Python, Quarto, Workbench, and the Professional Drivers</p>
         {{ form.csrf_token }}
-      <p>1. Ask the customer to run this command:<br><br>
-          <b>/usr/lib/rstudio-server/bin/code-server/bin/code-server --version</b><br><br>
-          Pull the last version number from the end of the line that looks like "<i>Code 1.71.2</i>".&nbsp;
-          The default version for Workbench 2022.12 is 1.71.2 </p>
-        {{ form.version.label }}&nbsp;{{ form.version }}
+      <p>1. Determine what versions of R your Data Scientists plant to use and enter them here:</p><br><br>
+        {{ form.r_versions.label }}&nbsp;{{ form.r_versions }}
         <br><br>
-        <p>2. Navigate to the extension page on open-vsx.org and grab the extension namespace
-            and name from the URL. eg, for Python the URL is
-            "<i>https://open-vsx.org/extension/ms-python/python</i>".<br> The namespace for this URL is "<i>ms-python</i>"
-            and the name is "<i>python</i>") </p>
-        {{ form.namespace.label }}&nbsp;{{ form.namespace }}<br><br>
-        {{ form.name.label }}&nbsp;{{ form.name }} <br><br>
+        <p>2. Determine what versions of Python your Data Scientists plant to use and enter them here:</p>
+        {{ form.python_versions.label }}&nbsp;{{ form.python_versions }}<br><br>
+        <p>3. Determine what versions of Quarto your Data Scientists plant to use and enter them here:</p>
+        {{ form.quarto_versions.label }}&nbsp;{{ form.quarto_versions }}<br><br>
+        <p>4. Select your supported OS:</p>
+        {{ form.os.label }}&nbsp;{{ form.os }} <br><br>
         {{ form.submit }}
             <div id="loading"></div>
         </form>
-        {% if 'open-vsx' in message['url'] %}
+        {% if 'rstudio' in message['url'] %}
             <p class="pt-5"> Compatible plugin for Posit Workbench with VSCode Version
                 {{message['version']}}:&nbsp; <strong>{{message['ext_version']}}</strong> <br>
                 Extension VSCode version requirement: <strong>^{{message['ext_req']}}</strong>

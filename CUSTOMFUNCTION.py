@@ -2,6 +2,8 @@ import re
 
 import requests
 from packaging import version
+import subprocess
+
 
 
 def vscode_lookup(vsc_version, namespace, name):
@@ -46,3 +48,8 @@ def vscode_lookup(vsc_version, namespace, name):
             result = {'version': workbench_vs_code, 'ext_version': key, 'ext_req': str_vs_code_version,
                       'url': json_correct_version_response['files']['download']}
             return result
+
+def URLRetrieval(r_versions, python_versions, OS):
+    command = "./wbi install r --version 4.2.2,4.1.3 --operating-system RH9"
+    output = subprocess.check_output(command, shell=True, encoding="utf-8")
+    return output

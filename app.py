@@ -25,9 +25,10 @@ Bootstrap(app)
 # "NameForm" can change; "(FlaskForm)" cannot
 # see the route for "/" and "index.html" to see how this is used
 class NameForm(FlaskForm):
-    version = StringField("Enter just the version number in the form X.X.X [1.71.2]: ")
-    namespace = StringField("Please enter the NAMESPACE of your selected extension [ms-python]: ")
-    name = StringField("Please enter the NAME of your selected extension [python]: ")
+    r_versions = StringField("R versions, comma separated [4.3.0,3.6.3]: ")
+    python_versions = StringField("Python versions, comma separated [3.11.4,3.10.12]: ")
+    quarto_versions = StringField("Quarto versions, comma separated [1.3.361,1.2.475]: ")
+    os = SelectField(u'Operating System', choices=[('U18', 'Ubuntu18'), ('U18', 'Ubuntu18'), ('U18', 'Ubuntu18'), ('RH7', 'RedHat 7'), ('RH8', 'RedHat 8'), ('RH9', 'RedHat 9')])
     submit = SubmitField('Submit', render_kw={"onclick": "loading();"})
 
 
@@ -40,9 +41,10 @@ def index():
     form = NameForm()
     message = ''
     if form.is_submitted():
-        message = ext_func.vscode_lookup(form.version.data or '1.71.2',
-                                         form.namespace.data or 'ms-python',
-                                         form.name.data or 'python')
+        message = ext_func.URLRetrieval(form.r_versions.data or '4.3.0,3.6.3',
+                                         form.python_versions.data or '3.11.4,3.10.12',
+                                         form.quarto_versions.data or '1.3.361,1.2.475',
+                                         form.os.data or 'RH9')
         return render_template('index.html', form=form, message=message)
     return render_template('index.html', form=form, message=message)
 
