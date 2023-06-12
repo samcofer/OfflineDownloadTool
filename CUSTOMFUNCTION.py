@@ -3,6 +3,7 @@ import re
 import requests
 from packaging import version
 import subprocess
+import ast
 
 
 
@@ -51,11 +52,11 @@ def vscode_lookup(vsc_version, namespace, name):
 
 def URLRetrieval(r_versions, python_versions, quarto_versions, OS):
     command = "./wbi install r --version " + r_versions + " --operating-system " + OS
-    output = subprocess.check_output(command, shell=True, encoding="utf-8")
+    r_output = ast.literal_eval(subprocess.check_output(command, shell=True, encoding="utf-8"))
     command = "./wbi install python --version " + python_versions + " --operating-system " + OS
-    output = output + subprocess.check_output(command, shell=True, encoding="utf-8")
+    python_output = ast.literal_eval(subprocess.check_output(command, shell=True, encoding="utf-8"))
     command = "./wbi install quarto --version " + quarto_versions + " --operating-system " + OS
-    output = output + subprocess.check_output(command, shell=True, encoding="utf-8")
+    quarto_output = ast.literal_eval(subprocess.check_output(command, shell=True, encoding="utf-8"))
     command = "./wbi install workbench --operating-system " + OS
-    output = output + subprocess.check_output(command, shell=True, encoding="utf-8")
-    return output
+    workbench_output = ast.literal_eval(subprocess.check_output(command, shell=True, encoding="utf-8"))
+    return r_output, python_output, quarto_output,workbench_output

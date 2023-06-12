@@ -50,16 +50,13 @@ VSCode Extension Lookup
         {{ form.submit }}
             <div id="loading"></div>
         </form>
-        {% if 'rstudio' in message['url'] %}
-            <p class="pt-5"> Compatible plugin for Posit Workbench with VSCode Version
-                {{message['version']}}:&nbsp; <strong>{{message['ext_version']}}</strong> <br>
-                Extension VSCode version requirement: <strong>^{{message['ext_req']}}</strong>
-                <br>Here is the download URL:&nbsp; <strong>{{message['url']}} </strong></p>
-        {% else %}
-            <p class="pt-5"><strong>{{ message }}</strong></p>
+        {%  if 'cdn' in r_urls %}
+            <p class="pt-5"> <h3>Download URLs:</h3> <br>
+                R:&nbsp; <strong>{{r_urls[0]}}</strong> <br>
+                Python:&nbsp; <strong>{{python_urls}}</strong> <br>
+                Quarto:&nbsp; <strong>{{quarto_urls}}</strong> <br>
+                Workbench:&nbsp; <strong>{{workbench_urls}}</strong> <br> </p>
         {% endif %}
-
-
     </div>
   </div>
 </div>

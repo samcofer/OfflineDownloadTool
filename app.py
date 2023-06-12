@@ -28,7 +28,7 @@ class NameForm(FlaskForm):
     r_versions = StringField("R versions, comma separated [4.3.0,3.6.3]: ")
     python_versions = StringField("Python versions, comma separated [3.11.4,3.10.12]: ")
     quarto_versions = StringField("Quarto versions, comma separated [1.3.361,1.2.475]: ")
-    os = SelectField(u'Operating System', choices=[('U18', 'Ubuntu18'), ('U18', 'Ubuntu18'), ('U18', 'Ubuntu18'), ('RH7', 'RedHat 7'), ('RH8', 'RedHat 8'), ('RH9', 'RedHat 9')])
+    os = SelectField(u'Operating System', choices=[('U20', 'Ubuntu20'), ('U22', 'Ubuntu22'), ('RH7', 'RedHat 7'), ('RH8', 'RedHat 8'), ('RH9', 'RedHat 9')])
     submit = SubmitField('Submit', render_kw={"onclick": "loading();"})
 
 
@@ -41,11 +41,12 @@ def index():
     form = NameForm()
     message = ''
     if form.is_submitted():
-        message = ext_func.URLRetrieval(form.r_versions.data or '4.3.0,3.6.3',
+        r_urls,python_urls, quarto_urls,workbench_urls = ext_func.URLRetrieval(form.r_versions.data or '4.3.0,3.6.3',
                                          form.python_versions.data or '3.11.4,3.10.12',
                                          form.quarto_versions.data or '1.3.361,1.2.475',
                                          form.os.data or 'RH9')
-        return render_template('index.html', form=form, message=message)
+        print(type(quarto_urls))
+        return render_template('index.html', form=form, r_urls=r_urls, python_urls=python_urls, quarto_urls=quarto_urls, workbench_urls=workbench_urls)
     return render_template('index.html', form=form, message=message)
 
 
