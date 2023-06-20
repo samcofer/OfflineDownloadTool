@@ -4,8 +4,10 @@ import requests
 from packaging import version
 import subprocess
 import ast
+import ctypes
 
-
+class ReVal(ctypes.Structure):
+    _fields_ = [("version", ctypes.c_char_p), ("url", ctypes.c_char_p)]
 
 def vscode_lookup(vsc_version, namespace, name):
     while True:
@@ -60,3 +62,62 @@ def URLRetrieval(r_versions, python_versions, quarto_versions, OS):
     command = "./wbi install workbench --operating-system " + OS
     workbench_output = ast.literal_eval(subprocess.check_output(command, shell=True, encoding="utf-8"))
     return r_output, python_output, quarto_output,workbench_output
+
+def URLRetrievalLib(r_versions, python_versions, quarto_versions, osstr):
+
+    lib = ctypes.cdll.LoadLibrary('./wbi.so')
+
+    lib.rurls.restype = ctypes.c_char_p
+    lib.rurls.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    r_versions_dict = dict()
+    for version in r_versions:
+        r_url = lib.rurls(osstr.encode('utf-8'), version.encode('utf-8'))
+        decode_string = r_url.decode('utf-8')
+        r_versions_dict[version] = decode_string
+
+    # print(r_versions_dict)
+
+    lib.pythonurls.restype = ctypes.c_char_p
+    lib.pythonurls.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    python_versions_dict = dict()
+    for version in python_versions:
+        python_versions = lib.pythonurls(osstr.encode('utf-8'), version.encode('utf-8'))
+        decode_string = python_versions.decode('utf-8')
+        python_versions_dict[version] = decode_string
+
+    # print(python_versions_dict)
+
+    lib.quartourls.restype = ctypes.c_char_p
+    lib.quartourls.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    quarto_versions_dict = dict()
+    for version in quarto_versions:
+        quarto_url = lib.quartourls(osstr.encode('utf-8'), version.encode('utf-8'))
+        decode_string = quarto_url.decode('utf-8')
+        quarto_versions_dict[version] = decode_string
+
+    # print(quarto_versions_dict)
+
+    lib.workbenchurl.restype = ReVal
+    lib.workbenchurl.argtypes = [ctypes.c_char_p]
+    workbench_ReVal = lib.workbenchurl(osstr.encode('utf-8'))
+    decode_URL = workbench_ReVal.url.decode('utf-8')
+    decode_Version = workbench_ReVal.version.decode('utf-8')
+    workbench_versions_dict = dict()
+    workbench_versions_dict[decode_Version] = decode_URL
+
+    # print(workbench_versions_dict)
+
+
+    lib.driverurl.restype = ReVal
+    lib.driverurl.argtypes = [ctypes.c_char_p]
+    driver_ReVal = lib.driverurl(osstr.encode('utf-8'))
+    decode_URL = driver_ReVal.url.decode('utf-8')
+    decode_Version = driver_ReVal.version.decode('utf-8')
+    driver_versions_dict = dict()
+    driver_versions_dict[decode_Version] = decode_URL
+
+    # print(driver_versions_dict)
+    
+    
+    
+    return r_versions_dict, python_versions_dict, quarto_versions_dict, workbench_versions_dict, driver_versions_dict

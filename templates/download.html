@@ -1,0 +1,249 @@
+<script type="text/javascript">// <![CDATA[
+        function loading(){
+            $("#loading").show();
+        }
+// ]]></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block styles %}
+{{ super() }}
+	<style type="text/css">
+		#loading {
+                width: 35px;
+                height: 35px;
+                background: url_for("static",filename="loading.gif") no-repeat center;
+                background-size: 35px;
+                display:none;
+                }
+    .dropdown-check-list {
+          display: inline-block;
+          background-color: white;
+          overflow: auto;
+          position: absolute;
+
+        }
+
+    .dropdown-check-list .anchor {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+            padding: 5px 50px 5px 10px;
+            border: 1px solid #ccc;
+        }
+
+    .dropdown-check-list .anchor:after {
+            position: absolute;
+            content: "";
+            border-left: 2px solid black;
+            border-top: 2px solid black;
+            padding: 5px;
+            right: 10px;
+            top: 20%;
+            -moz-transform: rotate(-135deg);
+            -ms-transform: rotate(-135deg);
+            -o-transform: rotate(-135deg);
+            -webkit-transform: rotate(-135deg);
+            transform: rotate(-135deg);
+        }
+
+    .dropdown-check-list .anchor:active:after {
+            right: 8px;
+            top: 21%;
+        }
+
+    .dropdown-check-list ul.items {
+            padding: 2px;
+            display: none;
+            margin: 0;
+            border-top: none;
+            max-height: 200px;
+            position: relative;
+            z-index: 50;
+            background-color: white;
+
+        }
+
+    .dropdown-check-list ul.items li {
+            list-style: none;
+            position: relative;
+            z-index: 50;
+        }
+
+    .dropdown-check-list.visible .anchor {
+            color: #0094ff;
+            
+        }
+
+    .dropdown-check-list.visible .items {
+            display: block;
+            position: relative;
+            z-index: 50;
+
+        }
+    .dropdown-check-list.visible {
+          position: absolute;
+            z-index: 100;
+    }
+      
+	</style>
+{% endblock %}
+
+
+{% block title %}
+Offline Posit Workbench Download Tool
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="mx-lg-auto mx-md-auto">
+
+      <h1 class="pt-5 pb-2">Offline Posit Workbench Installation Download Tool</h1>
+        <form action="{{ url_for('download', osstr=osstr) }}" method="post">
+      <p class="lead">This application will take the following information and return
+          the correct download links for R, Python, Quarto, Workbench, and the Professional Drivers</p>
+        {{ form.csrf_token }}
+      <p>1. Determine what versions of R your Data Scientists plant to use and enter them here:</p>
+      
+        {{ form.r_versions.label }}&nbsp;
+      <div id="list1" class="dropdown-check-list" tabindex="100">
+          <span class="anchor">Select R Versions</span>
+        {{ form.r_versions(class="items") }}
+      </div>
+        <br><br>
+      <p>2. Determine what versions of Python your Data Scientists plant to use and enter them here:</p>
+      {{ form.python_versions.label }}&nbsp;
+      <div id="list2" class="dropdown-check-list" tabindex="100">
+        <span class="anchor">Select Python Versions</span>
+          {{ form.python_versions(class="items") }}
+      </div>
+      <br><br>
+        <p>3. Determine what versions of Quarto your Data Scientists plant to use and enter them here:</p>
+        {{ form.quarto_versions.label }}&nbsp;
+      <div id="list3" class="dropdown-check-list" tabindex="100">
+          <span class="anchor">Select Quarto Versions</span>
+        {{ form.quarto_versions(class="items") }}
+      </div>
+      <br><br>
+      {{ form.submit }}
+            <div id="loading"></div>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th><h3>File</h3></th>
+              <th><h3>Download Link</h3></th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for r_url in r_urls %}
+          <tr>
+            <td>{{ r_url }}</td>
+            <td><a href="R {{ r_urls[r_url] }}">{{r_urls[r_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for python_url in python_urls %}
+          <tr>
+            <td>{{ python_url }}</td>
+            <td><a href="Python {{ python_urls[python_url] }}">{{python_urls[python_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for quarto_url in quarto_urls %}
+          <tr>
+            <td>{{ quarto_url }}</td>
+            <td><a href="Quarto {{ quarto_urls[quarto_url] }}">{{quarto_urls[quarto_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for workbench_url in workbench_urls %}
+          <tr>
+            <td>{{ workbench_url }}</td>
+            <td><a href="Workbench {{ workbench_urls[workbench_url] }}">{{workbench_urls[workbench_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for driver_url in driver_urls %}
+          <tr>
+            <td>{{ driver_url }}</td>
+            <td><a href="Pro Drivers {{ driver_urls[driver_url] }}">{{driver_urls[driver_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+         </tbody>
+       </table>
+                
+    </div>
+  </div>
+</div>
+
+<script>
+  var rcheckList = document.getElementById('list1');
+  rcheckList.getElementsByClassName('anchor')[0].onclick = function (evt) {
+      if (rcheckList.classList.contains('visible'))
+          rcheckList.classList.remove('visible');
+      else
+          rcheckList.classList.add('visible');
+  }
+</script>
+
+<script>
+  var pythoncheckList = document.getElementById('list2');
+  pythoncheckList.getElementsByClassName('anchor')[0].onclick = function (evt) {
+      if (pythoncheckList.classList.contains('visible'))
+          pythoncheckList.classList.remove('visible');
+      else
+          pythoncheckList.classList.add('visible');
+  }
+</script>
+
+<script>
+  var quartocheckList = document.getElementById('list3');
+  quartocheckList.getElementsByClassName('anchor')[0].onclick = function (evt) {
+      if (quartocheckList.classList.contains('visible'))
+          quartocheckList.classList.remove('visible');
+      else
+          quartocheckList.classList.add('visible');
+  }
+</script>
+
+<script>
+  document.addEventListener('click', function(event) {
+      const clickedElement = event.target;
+      const checkLists = [rcheckList, pythoncheckList, quartocheckList];
+      
+      // Check if clicked element is outside of checklists
+      let isOutsideChecklists = true;
+      checkLists.forEach(function(checkList) {
+          if (checkList.contains(clickedElement)) {
+              isOutsideChecklists = false;
+          }
+      });
+      
+      // Hide all checklists if clicked outside
+      if (isOutsideChecklists) {
+          checkLists.forEach(function(checkList) {
+              checkList.classList.remove('visible');
+          });
+      }
+  });
+</script>
+
+{% endblock %}
+
+<!--
+	TIPS about using Flask-Bootstrap:
+	Flask-Bootstrap keeps the default Bootstrap stylesheet in the
+	env/lib/python3.8/site-packages/flask_bootstrap/static/css/ directory.
+	You can replace the CSS file. HOWEVER, when you reinstall requirements
+	for your project, you would overwrite all the Bootstrap files
+	with the defaults.
+	Flask-Bootstrap templates are in
+	env/lib/python3.8/site-packages/flask_bootstrap/static/templates
+	Modifying the Bootstrap base.html template: use directives and
+	Jinja2's super() function. See Jinja2 documentation and also this:
+	https://pythonhosted.org/Flask-Bootstrap/basic-usage.html
+-->
