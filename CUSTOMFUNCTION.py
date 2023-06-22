@@ -5,6 +5,11 @@ from packaging import version
 import subprocess
 import ast
 import ctypes
+# import urllib library
+from urllib.request import urlopen
+  
+# import json
+import json
 
 class ReVal(ctypes.Structure):
     _fields_ = [("version", ctypes.c_char_p), ("url", ctypes.c_char_p)]
@@ -121,3 +126,50 @@ def URLRetrievalLib(r_versions, python_versions, quarto_versions, osstr):
     
     
     return r_versions_dict, python_versions_dict, quarto_versions_dict, workbench_versions_dict, driver_versions_dict
+
+def conver(x):
+    return {
+        'U20': "focal",
+        "U22": "jammy",
+        'RH7': "redhat7_64",
+        "RH8": "redhat8",
+        "RH9": "rhel9",
+    }[x]
+def pmver(x):
+    return {
+        'U20': "focal",
+        "U22": "jammy",
+        'RH7': "redhat7_64",
+        "RH8": "fedora28",
+        "RH9": "rhel9",
+    }[x]   
+
+def ConnectPackage(osstr):
+    # store the URL in url as
+    # parameter for urlopen
+    url = "https://www.rstudio.com/wp-content/downloads.json"
+
+    # store the response of URL
+    response = urlopen(url)
+
+    # storing the JSON response
+    # from url in data
+    data_json = json.loads(response.read())
+
+    connect_os = conver(osstr)
+    pm_os = pmver(osstr)
+ 
+
+    connect_url = data_json['connect']['installer'][connect_os]['url']
+    connect_version = data_json['connect']['installer'][connect_os]['version']
+    pm_url = data_json['rspm']['installer'][pm_os]['url']
+    pm_version = data_json['rspm']['installer'][pm_os]['version']
+
+
+    connect_versions_dict = dict()
+    connect_versions_dict[pm_version] = pm_url
+    pm_versions_dict = dict()
+    pm_versions_dict[connect_version] = connect_url
+
+    # print the json response
+    return connect_versions_dict, pm_versions_dict

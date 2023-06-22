@@ -1,9 +1,11 @@
-<script type="text/javascript">// <![CDATA[
-        function loading(){
-            $("#loading").show();
-        }
-// ]]></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+  function loading(){
+      $("#loading").show();
+  }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
 
 
 {% extends 'bootstrap/base.html' %}
@@ -16,7 +18,7 @@
 		#loading {
                 width: 35px;
                 height: 35px;
-                background: url_for("static",filename="loading.gif") no-repeat center;
+                background: url(../static/loading.gif) no-repeat center;
                 background-size: 35px;
                 display:none;
                 }
@@ -89,7 +91,66 @@
           position: absolute;
             z-index: 100;
     }
-      
+    table.blueTable {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  border: 1px solid #447099;
+  background-color: #FFFFFF;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+table.blueTable td, table.blueTable th {
+  border: 1px solid #AAAAAA;
+  padding: 3px 2px;
+}
+table.blueTable tbody td {
+  font-size: 15px;
+}
+table.blueTable tr:nth-child(even) {
+  background: #D0E4F5;
+}
+table.blueTable thead {
+  background: #447099;
+  background: -moz-linear-gradient(top, #7394b2 0%, #567ea3 66%, #447099 100%);
+  background: -webkit-linear-gradient(top, #7394b2 0%, #567ea3 66%, #447099 100%);
+  background: linear-gradient(to bottom, #7394b2 0%, #567ea3 66%, #447099 100%);
+  border-bottom: 2px solid #404041;
+}
+table.blueTable thead th {
+  font-size: 18px;
+  font-weight: bold;
+  color: #FFFFFF;
+  border-left: 2px solid #EE6331;
+  text-align: center;
+
+}
+table.blueTable thead th:first-child {
+  border-left: none;
+}
+
+table.blueTable tfoot {
+  font-size: 14px;
+  font-weight: bold;
+  color: #FFFFFF;
+  background: #D0E4F5;
+  background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  border-top: 2px solid #404041;
+}
+table.blueTable tfoot td {
+  font-size: 14px;
+}
+table.blueTable tfoot .links {
+  text-align: right;
+}
+table.blueTable tfoot .links a{
+  display: inline-block;
+  background: #447099;
+  color: #FFFFFF;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
 	</style>
 {% endblock %}
 
@@ -112,30 +173,35 @@ Offline Posit Workbench Download Tool
         {{ form.csrf_token }}
       <p>1. Determine what versions of R your Data Scientists plant to use and enter them here:</p>
       
-        {{ form.r_versions.label }}&nbsp;
+      {{ form.r_versions.label }}&nbsp;<span id="rselected_item"></span>
+        <br>
       <div id="list1" class="dropdown-check-list" tabindex="100">
           <span class="anchor">Select R Versions</span>
         {{ form.r_versions(class="items") }}
       </div>
         <br><br>
       <p>2. Determine what versions of Python your Data Scientists plant to use and enter them here:</p>
-      {{ form.python_versions.label }}&nbsp;
+      {{ form.python_versions.label }}&nbsp;<span id="pythonselected_item"></span>
+      <br>
       <div id="list2" class="dropdown-check-list" tabindex="100">
         <span class="anchor">Select Python Versions</span>
           {{ form.python_versions(class="items") }}
       </div>
       <br><br>
         <p>3. Determine what versions of Quarto your Data Scientists plant to use and enter them here:</p>
-        {{ form.quarto_versions.label }}&nbsp;
+        {{ form.quarto_versions.label }}&nbsp;<span id="quartoselected_item"></span>
+        <br>
       <div id="list3" class="dropdown-check-list" tabindex="100">
           <span class="anchor">Select Quarto Versions</span>
         {{ form.quarto_versions(class="items") }}
       </div>
       <br><br>
       {{ form.submit }}
-            <div id="loading"></div>
-        </form>
-        <table>
+      <div id="loading"></div>
+     </form>  
+
+      {% if r_urls is defined %}
+        <table class="blueTable">
           <thead>
             <tr>
               <th><h3>File</h3></th>
@@ -145,36 +211,64 @@ Offline Posit Workbench Download Tool
           <tbody>
           {% for r_url in r_urls %}
           <tr>
-            <td>{{ r_url }}</td>
+            <td><img src="https://cran.r-project.org/favicon.ico" 
+              width="32" 
+              height="32" />&nbsp;R {{ r_url }}</td>
             <td><a href="R {{ r_urls[r_url] }}">{{r_urls[r_url]}}</a> </td>
           </tr>
           {% endfor %}
           {% for python_url in python_urls %}
           <tr>
-            <td>{{ python_url }}</td>
+            <td><img src="https://www.python.org/static/favicon.ico" 
+              width="32" 
+              height="32" />&nbsp;Python {{ python_url }}</td>
             <td><a href="Python {{ python_urls[python_url] }}">{{python_urls[python_url]}}</a> </td>
           </tr>
           {% endfor %}
           {% for quarto_url in quarto_urls %}
           <tr>
-            <td>{{ quarto_url }}</td>
+            <td><img src="https://quarto.org/favicon.png" 
+              width="32" 
+              height="32" />&nbsp;Quarto {{ quarto_url }}</td>
             <td><a href="Quarto {{ quarto_urls[quarto_url] }}">{{quarto_urls[quarto_url]}}</a> </td>
           </tr>
           {% endfor %}
           {% for workbench_url in workbench_urls %}
           <tr>
-            <td>{{ workbench_url }}</td>
+            <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
+              width="32" 
+              height="32" />&nbsp;Workbench {{ workbench_url }}</td>
             <td><a href="Workbench {{ workbench_urls[workbench_url] }}">{{workbench_urls[workbench_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for connect_url in connect_urls %}
+          <tr>
+            <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
+              width="32" 
+              height="32" />&nbsp;Connect {{ connect_url }}</td>
+            <td><a href="Connect {{ connect_urls[connect_url] }}">{{connect_urls[connect_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for pm_url in pm_urls %}
+          <tr>
+            <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
+              width="32" 
+              height="32" />&nbsp;Package Manager {{ pm_url }}</td>
+            <td><a href="Package Manager {{ pm_urls[pm_url] }}">{{pm_urls[pm_url]}}</a> </td>
           </tr>
           {% endfor %}
           {% for driver_url in driver_urls %}
           <tr>
-            <td>{{ driver_url }}</td>
+            <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
+              width="32" 
+              height="32" />&nbsp;Pro Driver {{ driver_url }}</td>
             <td><a href="Pro Drivers {{ driver_urls[driver_url] }}">{{driver_urls[driver_url]}}</a> </td>
           </tr>
           {% endfor %}
          </tbody>
        </table>
+
+       {% endif %}
                 
     </div>
   </div>
@@ -231,6 +325,51 @@ Offline Posit Workbench Download Tool
       }
   });
 </script>
+
+<script>
+$('#list1 input[type="checkbox"]').on('click', function () {
+  var title = "";
+  $('#list1 input[type="checkbox"]').each(function(){           
+  if ($(this).is(':checked')) {
+      if(title != "")
+          title = title + ', ';
+      
+      title = title + $(this).val();
+      $('#rselected_item').html(title);
+  } 
+  });
+});
+</script>
+
+<script>
+  $('#list2 input[type="checkbox"]').on('click', function () {
+    var title = "";
+    $('#list2 input[type="checkbox"]').each(function(){           
+    if ($(this).is(':checked')) {
+        if(title != "")
+            title = title + ', ';
+        
+        title = title + $(this).val();
+        $('#pythonselected_item').html(title);
+    } 
+    });
+  });
+  </script>
+
+<script>
+  $('#list3 input[type="checkbox"]').on('click', function () {
+    var title = "";
+    $('#list3 input[type="checkbox"]').each(function(){           
+    if ($(this).is(':checked')) {
+        if(title != "")
+            title = title + ', ';
+        
+        title = title + $(this).val();
+        $('#quartoselected_item').html(title);
+    } 
+    });
+  });
+  </script>
 
 {% endblock %}
 

@@ -88,7 +88,7 @@ def index():
 
     form = create_language_form('')
     if form.validate_on_submit():
-        return redirect(url_for('download', osstr=form.os.data))
+        return redirect("https://colorado.posit.co" + url_for('index')+ f'download/{form.os.data}')
     return render_template('index.html', form=form)
 
 @app.route('/download/<osstr>', methods=['GET', 'POST'])
@@ -105,7 +105,9 @@ def download(osstr):
                                         form.python_versions.data or ['3.11.4','3.10.12'],
                                         form.quarto_versions.data or ['1.3.361','1.2.475'],
                                         osstr)
-        return render_template('download.html', form=form, r_urls=r_urls, python_urls=python_urls, quarto_urls=quarto_urls, workbench_urls=workbench_urls, driver_urls=driver_urls, osstr=osstr)
+        connect_urls, pm_urls = ext_func.ConnectPackage(osstr)
+        return render_template('download.html', form=form, r_urls=r_urls, python_urls=python_urls, quarto_urls=quarto_urls, 
+            workbench_urls=workbench_urls, driver_urls=driver_urls, connect_urls = connect_urls, pm_urls=pm_urls, osstr=osstr)
     return render_template('download.html', form=form, osstr=osstr)
 
 
