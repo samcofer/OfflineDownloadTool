@@ -2,7 +2,17 @@ import re
 
 import requests
 from packaging import version
+import subprocess
+import ast
+import ctypes
+# import urllib library
+from urllib.request import urlopen
+  
+# import json
+import json
 
+class ReVal(ctypes.Structure):
+    _fields_ = [("version", ctypes.c_char_p), ("url", ctypes.c_char_p)]
 
 def vscode_lookup(vsc_version, namespace, name):
     while True:
@@ -46,3 +56,120 @@ def vscode_lookup(vsc_version, namespace, name):
             result = {'version': workbench_vs_code, 'ext_version': key, 'ext_req': str_vs_code_version,
                       'url': json_correct_version_response['files']['download']}
             return result
+
+def URLRetrieval(r_versions, python_versions, quarto_versions, OS):
+    command = "./wbi install r --version " + r_versions + " --operating-system " + OS
+    r_output = ast.literal_eval(subprocess.check_output(command, shell=True, encoding="utf-8"))
+    command = "./wbi install python --version " + python_versions + " --operating-system " + OS
+    python_output = ast.literal_eval(subprocess.check_output(command, shell=True, encoding="utf-8"))
+    command = "./wbi install quarto --version " + quarto_versions + " --operating-system " + OS
+    quarto_output = ast.literal_eval(subprocess.check_output(command, shell=True, encoding="utf-8"))
+    command = "./wbi install workbench --operating-system " + OS
+    workbench_output = ast.literal_eval(subprocess.check_output(command, shell=True, encoding="utf-8"))
+    return r_output, python_output, quarto_output,workbench_output
+
+def URLRetrievalLib(r_versions, python_versions, quarto_versions, osstr):
+
+    lib = ctypes.cdll.LoadLibrary('./wbi.so')
+
+    lib.rurls.restype = ctypes.c_char_p
+    lib.rurls.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    r_versions_dict = dict()
+    for version in r_versions:
+        r_url = lib.rurls(osstr.encode('utf-8'), version.encode('utf-8'))
+        decode_string = r_url.decode('utf-8')
+        r_versions_dict[version] = decode_string
+
+    # print(r_versions_dict)
+
+    lib.pythonurls.restype = ctypes.c_char_p
+    lib.pythonurls.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    python_versions_dict = dict()
+    for version in python_versions:
+        python_versions = lib.pythonurls(osstr.encode('utf-8'), version.encode('utf-8'))
+        decode_string = python_versions.decode('utf-8')
+        python_versions_dict[version] = decode_string
+
+    # print(python_versions_dict)
+
+    lib.quartourls.restype = ctypes.c_char_p
+    lib.quartourls.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    quarto_versions_dict = dict()
+    for version in quarto_versions:
+        quarto_url = lib.quartourls(osstr.encode('utf-8'), version.encode('utf-8'))
+        decode_string = quarto_url.decode('utf-8')
+        quarto_versions_dict[version] = decode_string
+
+    # print(quarto_versions_dict)
+
+    lib.workbenchurl.restype = ReVal
+    lib.workbenchurl.argtypes = [ctypes.c_char_p]
+    workbench_ReVal = lib.workbenchurl(osstr.encode('utf-8'))
+    decode_URL = workbench_ReVal.url.decode('utf-8')
+    decode_Version = workbench_ReVal.version.decode('utf-8')
+    workbench_versions_dict = dict()
+    workbench_versions_dict[decode_Version] = decode_URL
+
+    # print(workbench_versions_dict)
+
+
+    lib.driverurl.restype = ReVal
+    lib.driverurl.argtypes = [ctypes.c_char_p]
+    driver_ReVal = lib.driverurl(osstr.encode('utf-8'))
+    decode_URL = driver_ReVal.url.decode('utf-8')
+    decode_Version = driver_ReVal.version.decode('utf-8')
+    driver_versions_dict = dict()
+    driver_versions_dict[decode_Version] = decode_URL
+
+    # print(driver_versions_dict)
+    
+    
+    
+    return r_versions_dict, python_versions_dict, quarto_versions_dict, workbench_versions_dict, driver_versions_dict
+
+def conver(x):
+    return {
+        'U20': "focal",
+        "U22": "jammy",
+        'RH7': "redhat7_64",
+        "RH8": "redhat8",
+        "RH9": "rhel9",
+    }[x]
+def pmver(x):
+    return {
+        'U20': "focal",
+        "U22": "jammy",
+        'RH7': "redhat7_64",
+        "RH8": "fedora28",
+        "RH9": "rhel9",
+    }[x]   
+
+def ConnectPackage(osstr):
+    # store the URL in url as
+    # parameter for urlopen
+    url = "https://www.rstudio.com/wp-content/downloads.json"
+
+    # store the response of URL
+    response = urlopen(url)
+
+    # storing the JSON response
+    # from url in data
+    data_json = json.loads(response.read())
+
+    connect_os = conver(osstr)
+    pm_os = pmver(osstr)
+ 
+
+    connect_url = data_json['connect']['installer'][connect_os]['url']
+    connect_version = data_json['connect']['installer'][connect_os]['version']
+    pm_url = data_json['rspm']['installer'][pm_os]['url']
+    pm_version = data_json['rspm']['installer'][pm_os]['version']
+
+
+    connect_versions_dict = dict()
+    connect_versions_dict[connect_version] = connect_url
+    pm_versions_dict = dict()
+    pm_versions_dict[pm_version] = pm_url
+
+    # print the json response
+    return connect_versions_dict, pm_versions_dict

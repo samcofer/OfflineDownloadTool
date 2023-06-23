@@ -1,0 +1,86 @@
+<script type="text/javascript">// <![CDATA[
+        function loading(){
+            $("#loading").show();
+        }
+// ]]></script>
+
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block styles %}
+{{ super() }}
+	<style type="text/css">
+		#loading {
+                width: 35px;
+                height: 35px;
+                background: url_for("static",filename="loading.gif") no-repeat center;
+                background-size: 35px;
+                display:none;
+                }
+	</style>
+{% endblock %}
+
+
+{% block title %}
+Offline Posit Workbench Download Tool
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
+
+      <h1 class="pt-5 pb-2">Offline Posit Workbench Installation Download Tool</h1>
+        <form action="{{ url_for('download') }}" method="post">
+      <p class="lead">This application will take the following information and return
+          the correct download links for R, Python, Quarto, Workbench, and the Professional Drivers</p>
+        {{ form.csrf_token }}
+      <p>1. Determine what versions of R your Data Scientists plant to use and enter them here:</p>
+        {{ form.r_versions.label }}&nbsp;{{ form.r_versions }}
+        <br><br>
+        <p>2. Determine what versions of Python your Data Scientists plant to use and enter them here:</p>
+        {{ form.python_versions.label }}&nbsp;{{ form.python_versions }}<br><br>
+        <p>3. Determine what versions of Quarto your Data Scientists plant to use and enter them here:</p>
+        {{ form.quarto_versions.label }}&nbsp;{{ form.quarto_versions }}<br><br>
+        <p>4. Select your supported OS:</p>
+        {{ form.os.label }}&nbsp;{{ form.os }} <br><br>
+        {{ form.submit }}
+            <div id="loading"></div>
+        </form>
+            <p class="pt-5"> <h3>Download URLs:</h3> <br>
+              {% for r_url in r_urls %}
+                R Download Link:&nbsp; <a href="{{r_url}}">{{r_url}}</a> <br>
+              {% endfor %}
+              {% for python_url in python_urls %}
+                Python Download Link:&nbsp; <a href="{{python_url}}">{{python_url}}</a> <br>
+              {% endfor %}
+              {% for quarto_url in quarto_urls %}
+                Quarto Download Link:&nbsp; <a href="{{quarto_url}}">{{quarto_url}}</a> <br>
+              {% endfor %}
+              {% for workbench_url in workbench_urls %}
+              Workbench Download Link:&nbsp; <a href="{{workbench_url}}">{{workbench_url}}</a> <br>
+              {% endfor %}
+                
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+<!--
+	TIPS about using Flask-Bootstrap:
+	Flask-Bootstrap keeps the default Bootstrap stylesheet in the
+	env/lib/python3.8/site-packages/flask_bootstrap/static/css/ directory.
+	You can replace the CSS file. HOWEVER, when you reinstall requirements
+	for your project, you would overwrite all the Bootstrap files
+	with the defaults.
+	Flask-Bootstrap templates are in
+	env/lib/python3.8/site-packages/flask_bootstrap/static/templates
+	Modifying the Bootstrap base.html template: use directives and
+	Jinja2's super() function. See Jinja2 documentation and also this:
+	https://pythonhosted.org/Flask-Bootstrap/basic-usage.html
+-->

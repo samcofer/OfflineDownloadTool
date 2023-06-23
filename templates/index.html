@@ -1,8 +1,9 @@
-<script type="text/javascript">// <![CDATA[
+<script type="text/javascript">
         function loading(){
             $("#loading").show();
         }
-// ]]></script>
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 {% extends 'bootstrap/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
@@ -14,16 +15,17 @@
 		#loading {
                 width: 35px;
                 height: 35px;
-                background: url_for("static",filename="loading.gif") no-repeat center;
+                background: url(static/loading.gif) no-repeat center;
                 background-size: 35px;
-                display:none;
+                display: none;
                 }
+
 	</style>
 {% endblock %}
 
 
 {% block title %}
-VSCode Extension Lookup
+Posit Download Tool
 {% endblock %}
 
 {% block content %}
@@ -31,39 +33,17 @@ VSCode Extension Lookup
 
 <div class="container">
   <div class="row">
-    <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
+    <div class="mx-lg-auto mx-md-auto">
 
-      <h1 class="pt-5 pb-2">Offline VSCode Extension Lookup Tool</h1>
+      <h1 class="pt-5 pb-2">Posit Download Tool</h1>
         <form action="{{ url_for('index') }}" method="post">
-      <p class="lead">This application will take the following information and return
-          the most recent version of VSCode Extension that will work with your version
-          of VSCode</p>
+      <p class="lead">This application will provide direct download links for R, Python, Quarto, Workbench, Connect, Package Manager and the Professional Drivers</p>
         {{ form.csrf_token }}
-      <p>1. Ask the customer to run this command:<br><br>
-          <b>/usr/lib/rstudio-server/bin/code-server/bin/code-server --version</b><br><br>
-          Pull the last version number from the end of the line that looks like "<i>Code 1.71.2</i>".&nbsp;
-          The default version for Workbench 2022.12 is 1.71.2 </p>
-        {{ form.version.label }}&nbsp;{{ form.version }}
-        <br><br>
-        <p>2. Navigate to the extension page on open-vsx.org and grab the extension namespace
-            and name from the URL. eg, for Python the URL is
-            "<i>https://open-vsx.org/extension/ms-python/python</i>".<br> The namespace for this URL is "<i>ms-python</i>"
-            and the name is "<i>python</i>") </p>
-        {{ form.namespace.label }}&nbsp;{{ form.namespace }}<br><br>
-        {{ form.name.label }}&nbsp;{{ form.name }} <br><br>
+        <p>Select your supported OS:</p>
+        {{ form.os.label }}&nbsp;{{ form.os }} <br><br>
         {{ form.submit }}
-            <div id="loading"></div>
-        </form>
-        {% if 'open-vsx' in message['url'] %}
-            <p class="pt-5"> Compatible plugin for Posit Workbench with VSCode Version
-                {{message['version']}}:&nbsp; <strong>{{message['ext_version']}}</strong> <br>
-                Extension VSCode version requirement: <strong>^{{message['ext_req']}}</strong>
-                <br>Here is the download URL:&nbsp; <strong>{{message['url']}} </strong></p>
-        {% else %}
-            <p class="pt-5"><strong>{{ message }}</strong></p>
-        {% endif %}
-
-
+         <div id="loading"></div>
+        </form>                
     </div>
   </div>
 </div>

@@ -1,0 +1,12 @@
+{
+    "https://colorado.posit.co/rsc": {
+        "server_url": "https://colorado.posit.co/rsc",
+        "filename": "/usr/home/sam.cofer/projects/FlaskSimpleTemplate",
+        "app_url": "https://colorado.posit.co/rsc/OfflineDownloads/",
+        "app_id": "5d271757-43d1-4c15-ac1f-371ddbf4d830",
+        "app_guid": "5d271757-43d1-4c15-ac1f-371ddbf4d830",
+        "title": "Posit Download Tool",
+        "app_mode": "python-api",
+        "app_store_version": 1
+    }
+}

@@ -1,0 +1,387 @@
+<script type="text/javascript">
+  function loading(){
+      $("#loading").show();
+  }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+
+
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block styles %}
+{{ super() }}
+	<style type="text/css">
+		#loading {
+                width: 35px;
+                height: 35px;
+                background: url(../static/loading.gif) no-repeat center;
+                background-size: 35px;
+                display:none;
+                }
+    .dropdown-check-list {
+          display: inline-block;
+          background-color: white;
+          overflow: auto;
+          position: absolute;
+
+        }
+
+    .dropdown-check-list .anchor {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+            padding: 5px 50px 5px 10px;
+            border: 1px solid #ccc;
+        }
+
+    .dropdown-check-list .anchor:after {
+            position: absolute;
+            content: "";
+            border-left: 2px solid black;
+            border-top: 2px solid black;
+            padding: 5px;
+            right: 10px;
+            top: 20%;
+            -moz-transform: rotate(-135deg);
+            -ms-transform: rotate(-135deg);
+            -o-transform: rotate(-135deg);
+            -webkit-transform: rotate(-135deg);
+            transform: rotate(-135deg);
+        }
+
+    .dropdown-check-list .anchor:active:after {
+            right: 8px;
+            top: 21%;
+        }
+
+    .dropdown-check-list ul.items {
+            padding: 2px;
+            display: none;
+            margin: 0;
+            border-top: none;
+            max-height: 200px;
+            position: relative;
+            z-index: 50;
+            background-color: white;
+
+        }
+
+    .dropdown-check-list ul.items li {
+            list-style: none;
+            position: relative;
+            z-index: 50;
+        }
+
+    .dropdown-check-list.visible .anchor {
+            color: #0094ff;
+            
+        }
+
+    .dropdown-check-list.visible .items {
+            display: block;
+            position: relative;
+            z-index: 50;
+
+        }
+    .dropdown-check-list.visible {
+          position: absolute;
+            z-index: 100;
+    }
+    table.blueTable {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  border: 1px solid #447099;
+  background-color: #FFFFFF;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+table.blueTable td, table.blueTable th {
+  border: 1px solid #AAAAAA;
+  padding: 3px 2px;
+}
+table.blueTable tbody td {
+  font-size: 15px;
+}
+table.blueTable tr:nth-child(even) {
+  background: #D0E4F5;
+}
+table.blueTable thead {
+  background: #447099;
+  background: -moz-linear-gradient(top, #7394b2 0%, #567ea3 66%, #447099 100%);
+  background: -webkit-linear-gradient(top, #7394b2 0%, #567ea3 66%, #447099 100%);
+  background: linear-gradient(to bottom, #7394b2 0%, #567ea3 66%, #447099 100%);
+  border-bottom: 2px solid #404041;
+}
+table.blueTable thead th {
+  font-size: 18px;
+  font-weight: bold;
+  color: #FFFFFF;
+  border-left: 2px solid #EE6331;
+  text-align: center;
+
+}
+table.blueTable thead th:first-child {
+  border-left: none;
+}
+
+table.blueTable tfoot {
+  font-size: 14px;
+  font-weight: bold;
+  color: #FFFFFF;
+  background: #D0E4F5;
+  background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  border-top: 2px solid #404041;
+}
+table.blueTable tfoot td {
+  font-size: 14px;
+}
+table.blueTable tfoot .links {
+  text-align: right;
+}
+table.blueTable tfoot .links a{
+  display: inline-block;
+  background: #447099;
+  color: #FFFFFF;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+	</style>
+{% endblock %}
+
+
+{% block title %}
+Posit Download Tool
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="mx-lg-auto mx-md-auto">
+
+      <h1 class="pt-5 pb-2">Posit Download Tool</h1>
+        <form action="{{ url_for('download', osstr=osstr) }}" method="post">
+      <p class="lead">This application will provide direct download links for R, Python, Quarto, Workbench, Connect, Package Manager and the Professional Drivers</p>
+        {{ form.csrf_token }}
+      <p>1. Determine what versions of R your Data Scientists plant to use and enter them here:</p>
+      
+      {{ form.r_versions.label }}&nbsp;<span id="rselected_item"></span>
+        <br>
+      <div id="list1" class="dropdown-check-list" tabindex="100">
+          <span class="anchor">Select R Versions</span>
+        {{ form.r_versions(class="items") }}
+      </div>
+        <br><br>
+      <p>2. Determine what versions of Python your Data Scientists plant to use and enter them here:</p>
+      {{ form.python_versions.label }}&nbsp;<span id="pythonselected_item"></span>
+      <br>
+      <div id="list2" class="dropdown-check-list" tabindex="100">
+        <span class="anchor">Select Python Versions</span>
+          {{ form.python_versions(class="items") }}
+      </div>
+      <br><br>
+        <p>3. Determine what versions of Quarto your Data Scientists plant to use and enter them here:</p>
+        {{ form.quarto_versions.label }}&nbsp;<span id="quartoselected_item"></span>
+        <br>
+      <div id="list3" class="dropdown-check-list" tabindex="100">
+          <span class="anchor">Select Quarto Versions</span>
+        {{ form.quarto_versions(class="items") }}
+      </div>
+      <br><br>
+      {{ form.submit }}
+      <div id="loading"></div>
+     </form>  
+
+      {% if r_urls is defined %}
+        <table class="blueTable">
+          <thead>
+            <tr>
+              <th><h3>File</h3></th>
+              <th><h3>Download Link</h3></th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for r_url in r_urls %}
+          <tr>
+            <td><img src="https://cran.r-project.org/favicon.ico" 
+              width="32" 
+              height="32" />&nbsp;R {{ r_url }}</td>
+            <td><a href="R {{ r_urls[r_url] }}">{{r_urls[r_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for python_url in python_urls %}
+          <tr>
+            <td><img src="https://www.python.org/static/favicon.ico" 
+              width="32" 
+              height="32" />&nbsp;Python {{ python_url }}</td>
+            <td><a href="Python {{ python_urls[python_url] }}">{{python_urls[python_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for quarto_url in quarto_urls %}
+          <tr>
+            <td><img src="https://quarto.org/favicon.png" 
+              width="32" 
+              height="32" />&nbsp;Quarto {{ quarto_url }}</td>
+            <td><a href="Quarto {{ quarto_urls[quarto_url] }}">{{quarto_urls[quarto_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for workbench_url in workbench_urls %}
+          <tr>
+            <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
+              width="32" 
+              height="32" />&nbsp;Workbench {{ workbench_url }}</td>
+            <td><a href="Workbench {{ workbench_urls[workbench_url] }}">{{workbench_urls[workbench_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for connect_url in connect_urls %}
+          <tr>
+            <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
+              width="32" 
+              height="32" />&nbsp;Connect {{ connect_url }}</td>
+            <td><a href="Connect {{ connect_urls[connect_url] }}">{{connect_urls[connect_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for pm_url in pm_urls %}
+          <tr>
+            <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
+              width="32" 
+              height="32" />&nbsp;Package Manager {{ pm_url }}</td>
+            <td><a href="Package Manager {{ pm_urls[pm_url] }}">{{pm_urls[pm_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+          {% for driver_url in driver_urls %}
+          <tr>
+            <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
+              width="32" 
+              height="32" />&nbsp;Pro Driver {{ driver_url }}</td>
+            <td><a href="Pro Drivers {{ driver_urls[driver_url] }}">{{driver_urls[driver_url]}}</a> </td>
+          </tr>
+          {% endfor %}
+         </tbody>
+       </table>
+
+       {% endif %}
+                
+    </div>
+  </div>
+</div>
+
+<script>
+  var rcheckList = document.getElementById('list1');
+  rcheckList.getElementsByClassName('anchor')[0].onclick = function (evt) {
+      if (rcheckList.classList.contains('visible'))
+          rcheckList.classList.remove('visible');
+      else
+          rcheckList.classList.add('visible');
+  }
+</script>
+
+<script>
+  var pythoncheckList = document.getElementById('list2');
+  pythoncheckList.getElementsByClassName('anchor')[0].onclick = function (evt) {
+      if (pythoncheckList.classList.contains('visible'))
+          pythoncheckList.classList.remove('visible');
+      else
+          pythoncheckList.classList.add('visible');
+  }
+</script>
+
+<script>
+  var quartocheckList = document.getElementById('list3');
+  quartocheckList.getElementsByClassName('anchor')[0].onclick = function (evt) {
+      if (quartocheckList.classList.contains('visible'))
+          quartocheckList.classList.remove('visible');
+      else
+          quartocheckList.classList.add('visible');
+  }
+</script>
+
+<script>
+  document.addEventListener('click', function(event) {
+      const clickedElement = event.target;
+      const checkLists = [rcheckList, pythoncheckList, quartocheckList];
+      
+      // Check if clicked element is outside of checklists
+      let isOutsideChecklists = true;
+      checkLists.forEach(function(checkList) {
+          if (checkList.contains(clickedElement)) {
+              isOutsideChecklists = false;
+          }
+      });
+      
+      // Hide all checklists if clicked outside
+      if (isOutsideChecklists) {
+          checkLists.forEach(function(checkList) {
+              checkList.classList.remove('visible');
+          });
+      }
+  });
+</script>
+
+<script>
+$('#list1 input[type="checkbox"]').on('click', function () {
+  var title = "";
+  $('#list1 input[type="checkbox"]').each(function(){           
+  if ($(this).is(':checked')) {
+      if(title != "")
+          title = title + ', ';
+      
+      title = title + $(this).val();
+      $('#rselected_item').html(title);
+  } 
+  });
+});
+</script>
+
+<script>
+  $('#list2 input[type="checkbox"]').on('click', function () {
+    var title = "";
+    $('#list2 input[type="checkbox"]').each(function(){           
+    if ($(this).is(':checked')) {
+        if(title != "")
+            title = title + ', ';
+        
+        title = title + $(this).val();
+        $('#pythonselected_item').html(title);
+    } 
+    });
+  });
+  </script>
+
+<script>
+  $('#list3 input[type="checkbox"]').on('click', function () {
+    var title = "";
+    $('#list3 input[type="checkbox"]').each(function(){           
+    if ($(this).is(':checked')) {
+        if(title != "")
+            title = title + ', ';
+        
+        title = title + $(this).val();
+        $('#quartoselected_item').html(title);
+    } 
+    });
+  });
+  </script>
+
+{% endblock %}
+
+<!--
+	TIPS about using Flask-Bootstrap:
+	Flask-Bootstrap keeps the default Bootstrap stylesheet in the
+	env/lib/python3.8/site-packages/flask_bootstrap/static/css/ directory.
+	You can replace the CSS file. HOWEVER, when you reinstall requirements
+	for your project, you would overwrite all the Bootstrap files
+	with the defaults.
+	Flask-Bootstrap templates are in
+	env/lib/python3.8/site-packages/flask_bootstrap/static/templates
+	Modifying the Bootstrap base.html template: use directives and
+	Jinja2's super() function. See Jinja2 documentation and also this:
+	https://pythonhosted.org/Flask-Bootstrap/basic-usage.html
+-->
