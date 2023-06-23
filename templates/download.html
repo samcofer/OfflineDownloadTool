@@ -15,6 +15,7 @@
 {% block styles %}
 {{ super() }}
 	<style type="text/css">
+    /* Loading gif css */
 		#loading {
                 width: 35px;
                 height: 35px;
@@ -22,6 +23,7 @@
                 background-size: 35px;
                 display:none;
                 }
+    /* Style the dropdowns to be ontop and have a white background. Also positioning */
     .dropdown-check-list {
           display: inline-block;
           background-color: white;
@@ -91,6 +93,8 @@
           position: absolute;
             z-index: 100;
     }
+
+    /* Make the table more beautiful and nice looking using Posit colors */
     table.blueTable {
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   border: 1px solid #447099;
@@ -170,10 +174,13 @@ Posit Download Tool
         <form action="{{ url_for('download', osstr=osstr) }}" method="post">
       <p class="lead">This application will provide direct download links for R, Python, Quarto, Workbench, Connect, Package Manager and the Professional Drivers</p>
         {{ form.csrf_token }}
+
+        <!-- Information portion of the form -->
       <p>1. Determine what versions of R your Data Scientists plant to use and enter them here:</p>
       
       {{ form.r_versions.label }}&nbsp;<span id="rselected_item"></span>
         <br>
+        <!-- Important div and span for the dropdown styling and Javascript -->
       <div id="list1" class="dropdown-check-list" tabindex="100">
           <span class="anchor">Select R Versions</span>
         {{ form.r_versions(class="items") }}
@@ -182,6 +189,7 @@ Posit Download Tool
       <p>2. Determine what versions of Python your Data Scientists plant to use and enter them here:</p>
       {{ form.python_versions.label }}&nbsp;<span id="pythonselected_item"></span>
       <br>
+       <!-- Important div and span for the dropdown styling and Javascript -->
       <div id="list2" class="dropdown-check-list" tabindex="100">
         <span class="anchor">Select Python Versions</span>
           {{ form.python_versions(class="items") }}
@@ -190,12 +198,14 @@ Posit Download Tool
         <p>3. Determine what versions of Quarto your Data Scientists plant to use and enter them here:</p>
         {{ form.quarto_versions.label }}&nbsp;<span id="quartoselected_item"></span>
         <br>
+        <!-- Important div and span for the dropdown styling and Javascript -->
       <div id="list3" class="dropdown-check-list" tabindex="100">
           <span class="anchor">Select Quarto Versions</span>
         {{ form.quarto_versions(class="items") }}
       </div>
       <br><br>
       {{ form.submit }}
+      <!-- Loading gif div -->
       <div id="loading"></div>
      </form>  
 
@@ -208,6 +218,7 @@ Posit Download Tool
             </tr>
           </thead>
           <tbody>
+            <!-- loop through returned URLs -->
           {% for r_url in r_urls %}
           <tr>
             <td><img src="https://cran.r-project.org/favicon.ico" 
@@ -273,6 +284,7 @@ Posit Download Tool
   </div>
 </div>
 
+<!-- Convert listbox to checklist dropdown -->
 <script>
   var rcheckList = document.getElementById('list1');
   rcheckList.getElementsByClassName('anchor')[0].onclick = function (evt) {
@@ -303,6 +315,7 @@ Posit Download Tool
   }
 </script>
 
+<!-- Close checklist when the user clicks outside the dropdown -->
 <script>
   document.addEventListener('click', function(event) {
       const clickedElement = event.target;
@@ -324,6 +337,8 @@ Posit Download Tool
       }
   });
 </script>
+
+<!-- Dynamically add selected versions to the page -->
 
 <script>
 $('#list1 input[type="checkbox"]').on('click', function () {
@@ -371,17 +386,3 @@ $('#list1 input[type="checkbox"]').on('click', function () {
   </script>
 
 {% endblock %}
-
-<!--
-	TIPS about using Flask-Bootstrap:
-	Flask-Bootstrap keeps the default Bootstrap stylesheet in the
-	env/lib/python3.8/site-packages/flask_bootstrap/static/css/ directory.
-	You can replace the CSS file. HOWEVER, when you reinstall requirements
-	for your project, you would overwrite all the Bootstrap files
-	with the defaults.
-	Flask-Bootstrap templates are in
-	env/lib/python3.8/site-packages/flask_bootstrap/static/templates
-	Modifying the Bootstrap base.html template: use directives and
-	Jinja2's super() function. See Jinja2 documentation and also this:
-	https://pythonhosted.org/Flask-Bootstrap/basic-usage.html
--->

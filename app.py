@@ -47,8 +47,12 @@ def create_language_form(osstr):
         pythonchoices = []
         global quartochoices
         quartochoices = []
+        #Only render these options if an OS has already been selected and don't re-render if rchoices is already populated
         if osstr and not rchoices:
+            #Load C library
             lib = ctypes.cdll.LoadLibrary('./wbi.so')
+
+            #Use WBI to retrieve R Versions
             lib.rversions.restype = ctypes.c_char_p
             r_versions = lib.rversions()
             decode_string = r_versions.decode('utf-8')
@@ -56,6 +60,8 @@ def create_language_form(osstr):
             rchoices = [(option, option) for option in r_versions_list]
             
             r_versions = MultiCheckboxField("R versions: ", choices=rchoices)
+
+            #Use WBI to retrieve Python Versions
 
             lib.pythonversions.restype = ctypes.c_char_p
             lib.pythonversions.argtypes = [ctypes.c_char_p]
@@ -66,6 +72,8 @@ def create_language_form(osstr):
 
             python_versions = MultiCheckboxField("Python versions: ", choices=pythonchoices)
             
+            #Use WBI to retrieve Quarto Versions
+
             lib.quartoversions.restype = ctypes.c_char_p
             quarto_versions = lib.quartoversions()
             decode_string = quarto_versions.decode('utf-8')
@@ -82,15 +90,13 @@ def create_language_form(osstr):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # you must tell the variable 'form' what you named the class, above
-    # 'form' is the variable name used in this template: index.html
-    message = ''
-
+    #Redirect if the form has been submitted and take the select OS and pass it to download
     form = create_language_form('')
     if form.validate_on_submit():
         return redirect("https://colorado.posit.co" + url_for('index')+ f'download/{form.os.data}')
     return render_template('index.html', form=form)
 
+#osstr is a URL variable that we use to get the right download URLS
 @app.route('/download/<osstr>', methods=['GET', 'POST'])
 def download(osstr):
     # you must tell the variable 'form' what you named the class, above
@@ -101,6 +107,7 @@ def download(osstr):
         r_version_concat = ','.join(form.r_versions.data)
         python_version_concat = ','.join(form.python_versions.data)
         quarto_version_concat = ','.join(form.quarto_versions.data)
+        #TODO: Make these defaults dynamic and only return the latest versions of R, Python and Quarto
         r_urls, python_urls, quarto_urls, workbench_urls, driver_urls = ext_func.URLRetrievalLib(form.r_versions.data or ['4.3.1'],
                                         form.python_versions.data or ['3.11.4'],
                                         form.quarto_versions.data or ['1.3.361'],
@@ -121,14 +128,6 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
-
-@app.route('/get_selected_items', methods=['GET'])
-def get_selected_items():
-    r_versions = request.args.getlist('r_versions[]')
-    print(r_versions)
-    # Do something with the selected items (e.g., process or store them)
-
-    return ''  # Return an empty response
 
 # keep this as is
 if __name__ == '__main__':
