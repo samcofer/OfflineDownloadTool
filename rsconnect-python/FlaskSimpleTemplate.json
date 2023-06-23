@@ -5,7 +5,7 @@
         "app_url": "https://colorado.posit.co/rsc/OfflineDownloads/",
         "app_id": "5d271757-43d1-4c15-ac1f-371ddbf4d830",
         "app_guid": "5d271757-43d1-4c15-ac1f-371ddbf4d830",
-        "title": "FlaskSimpleTemplate",
+        "title": "Posit Download Tool",
         "app_mode": "python-api",
         "app_store_version": 1
     }

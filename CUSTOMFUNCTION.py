@@ -167,9 +167,9 @@ def ConnectPackage(osstr):
 
 
     connect_versions_dict = dict()
-    connect_versions_dict[pm_version] = pm_url
+    connect_versions_dict[connect_version] = connect_url
     pm_versions_dict = dict()
-    pm_versions_dict[connect_version] = connect_url
+    pm_versions_dict[pm_version] = pm_url
 
     # print the json response
     return connect_versions_dict, pm_versions_dict

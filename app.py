@@ -101,9 +101,9 @@ def download(osstr):
         r_version_concat = ','.join(form.r_versions.data)
         python_version_concat = ','.join(form.python_versions.data)
         quarto_version_concat = ','.join(form.quarto_versions.data)
-        r_urls, python_urls, quarto_urls, workbench_urls, driver_urls = ext_func.URLRetrievalLib(form.r_versions.data or ['4.3.0','3.6.3'],
-                                        form.python_versions.data or ['3.11.4','3.10.12'],
-                                        form.quarto_versions.data or ['1.3.361','1.2.475'],
+        r_urls, python_urls, quarto_urls, workbench_urls, driver_urls = ext_func.URLRetrievalLib(form.r_versions.data or ['4.3.1'],
+                                        form.python_versions.data or ['3.11.4'],
+                                        form.quarto_versions.data or ['1.3.361'],
                                         osstr)
         connect_urls, pm_urls = ext_func.ConnectPackage(osstr)
         return render_template('download.html', form=form, r_urls=r_urls, python_urls=python_urls, quarto_urls=quarto_urls, 
