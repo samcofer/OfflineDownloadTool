@@ -1,0 +1,12 @@
+{
+    "https://colorado.posit.co/rsc": {
+        "server_url": "https://colorado.posit.co/rsc",
+        "filename": "/usr/home/sam.cofer/OfflineDownloadTool",
+        "app_url": "https://colorado.posit.co/rsc/content/77041873-98f9-4d8f-bd05-676bad85f892/",
+        "app_id": 19230,
+        "app_guid": "77041873-98f9-4d8f-bd05-676bad85f892",
+        "title": "OfflineDownloadTool",
+        "app_mode": "python-api",
+        "app_store_version": 1
+    }
+}
