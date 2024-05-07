@@ -224,7 +224,7 @@ Posit Download Tool
             <td><img src="https://cran.r-project.org/favicon.ico" 
               width="32" 
               height="32" />&nbsp;R {{ r_url }}</td>
-            <td><a href="R {{ r_urls[r_url] }}">{{r_urls[r_url]}}</a> </td>
+            <td><a href="{{ r_urls[r_url] }}">{{r_urls[r_url]}}</a> </td>
           </tr>
           {% endfor %}
           {% for python_url in python_urls %}
@@ -232,7 +232,7 @@ Posit Download Tool
             <td><img src="https://www.python.org/static/favicon.ico" 
               width="32" 
               height="32" />&nbsp;Python {{ python_url }}</td>
-            <td><a href="Python {{ python_urls[python_url] }}">{{python_urls[python_url]}}</a> </td>
+            <td><a href="{{ python_urls[python_url] }}">{{python_urls[python_url]}}</a> </td>
           </tr>
           {% endfor %}
           {% for quarto_url in quarto_urls %}
@@ -240,7 +240,7 @@ Posit Download Tool
             <td><img src="https://quarto.org/favicon.png" 
               width="32" 
               height="32" />&nbsp;Quarto {{ quarto_url }}</td>
-            <td><a href="Quarto {{ quarto_urls[quarto_url] }}">{{quarto_urls[quarto_url]}}</a> </td>
+            <td><a href="{{ quarto_urls[quarto_url] }}">{{quarto_urls[quarto_url]}}</a> </td>
           </tr>
           {% endfor %}
           {% for workbench_url in workbench_urls %}
@@ -248,7 +248,7 @@ Posit Download Tool
             <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
               width="32" 
               height="32" />&nbsp;Workbench {{ workbench_url }}</td>
-            <td><a href="Workbench {{ workbench_urls[workbench_url] }}">{{workbench_urls[workbench_url]}}</a> </td>
+            <td><a href="{{ workbench_urls[workbench_url] }}">{{workbench_urls[workbench_url]}}</a> </td>
           </tr>
           {% endfor %}
           {% for connect_url in connect_urls %}
@@ -256,7 +256,7 @@ Posit Download Tool
             <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
               width="32" 
               height="32" />&nbsp;Connect {{ connect_url }}</td>
-            <td><a href="Connect {{ connect_urls[connect_url] }}">{{connect_urls[connect_url]}}</a> </td>
+            <td><a href="{{ connect_urls[connect_url] }}">{{connect_urls[connect_url]}}</a> </td>
           </tr>
           {% endfor %}
           {% for pm_url in pm_urls %}
@@ -264,7 +264,7 @@ Posit Download Tool
             <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
               width="32" 
               height="32" />&nbsp;Package Manager {{ pm_url }}</td>
-            <td><a href="Package Manager {{ pm_urls[pm_url] }}">{{pm_urls[pm_url]}}</a> </td>
+            <td><a href="{{ pm_urls[pm_url] }}">{{pm_urls[pm_url]}}</a> </td>
           </tr>
           {% endfor %}
           {% for driver_url in driver_urls %}
@@ -272,7 +272,7 @@ Posit Download Tool
             <td><img src="https://posit.co/wp-content/themes/Posit/dist/images/favicon/favicon-32x32.png" 
               width="32" 
               height="32" />&nbsp;Pro Driver {{ driver_url }}</td>
-            <td><a href="Pro Drivers {{ driver_urls[driver_url] }}">{{driver_urls[driver_url]}}</a> </td>
+            <td><a href="{{ driver_urls[driver_url] }}">{{driver_urls[driver_url]}}</a> </td>
           </tr>
           {% endfor %}
          </tbody>
