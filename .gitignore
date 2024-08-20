@@ -2,3 +2,4 @@
 __pycache__
 wbi-command*
 wbi-log*
+/.luarc.json
