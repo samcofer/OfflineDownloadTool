@@ -93,7 +93,7 @@ def index():
     #Redirect if the form has been submitted and take the select OS and pass it to download
     form = create_language_form('')
     if form.validate_on_submit():
-        return redirect("https://colorado.posit.co" + url_for('index')+ f'download/{form.os.data}')
+        return redirect("https://pub.current.posit.team" + url_for('index')+ f'download/{form.os.data}')
     return render_template('index.html', form=form)
 
 #osstr is a URL variable that we use to get the right download URLS
